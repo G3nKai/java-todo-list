@@ -11,12 +11,14 @@ import com.java.todolist.core.repositories.ITaskRepository;
 
 @Service
 public class TaskService {
-    
+
     @Autowired
     private ITaskRepository taskRepository;
 
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+        System.out.println("Retrieved tasks: " + tasks);
+        return tasks;
     }
 
     public Task createTask(Task task) {
