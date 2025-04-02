@@ -16,9 +16,7 @@ public class TaskService {
     private ITaskRepository taskRepository;
 
     public List<Task> getAllTasks() {
-        List<Task> tasks = taskRepository.findAll();
-        System.out.println("Retrieved tasks: " + tasks);
-        return tasks;
+        return taskRepository.findAll();
     }
 
     public Task createTask(Task task) {
