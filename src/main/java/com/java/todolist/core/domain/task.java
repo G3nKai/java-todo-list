@@ -6,10 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class task {
+@Table(name = "task")
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -18,7 +20,7 @@ public class task {
     @NotNull
     private String description;
 
-    public task(String name, String description) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
     }
