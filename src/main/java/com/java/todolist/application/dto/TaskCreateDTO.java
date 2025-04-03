@@ -1,11 +1,12 @@
 package com.java.todolist.application.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class TaskCreateDTO {
-    @NotNull
+    @NotNull(message = "Name can not be null.")
+    @Size(min = 4, message = "Name should be at least 4 characters long.")
     private String name;
-    @NotNull
     private String description;
 
     public TaskCreateDTO(String name, String description) {
