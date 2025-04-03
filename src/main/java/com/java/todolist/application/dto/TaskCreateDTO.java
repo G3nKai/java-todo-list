@@ -1,5 +1,7 @@
 package com.java.todolist.application.dto;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -8,6 +10,7 @@ public class TaskCreateDTO {
     @Size(min = 4, message = "Name should be at least 4 characters long.")
     private String name;
     private String description;
+    private LocalDate deadline;
 
     public TaskCreateDTO(String name, String description) {
         this.name = name;
@@ -28,5 +31,13 @@ public class TaskCreateDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 }

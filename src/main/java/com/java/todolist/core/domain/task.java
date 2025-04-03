@@ -1,5 +1,6 @@
 package com.java.todolist.core.domain;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -16,7 +17,7 @@ public class Task {
     private UUID id;
     private String name;
     private String description;
-
+    private LocalDate deadline;
     public Task() {
         
     }
@@ -24,6 +25,13 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+        this.deadline = null;
+    }
+
+    public Task(String name, String description, LocalDate deadline) {
+        this.name = name;
+        this.description = description;
+        this.deadline = deadline;
     }
 
     public UUID getId() {
@@ -44,5 +52,13 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 }
