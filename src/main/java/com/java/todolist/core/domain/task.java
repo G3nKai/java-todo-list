@@ -16,10 +16,15 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    @Column(nullable = false)
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
+    @Column(nullable = false)
     private LocalDate deadline;
+    @Column(nullable = false)
     private Status status;
+    @Column(nullable = false)
     private Priority priority;
     @Column(nullable = false)
     private LocalDate created;
