@@ -32,12 +32,11 @@ public class TaskController {
 
     @PostMapping("")
     public Task createTask(@RequestBody @Valid TaskCreateDTO taskCreateDTO) {
-        Task task = new Task(taskCreateDTO.getName(), taskCreateDTO.getDescription(), taskCreateDTO.getDeadline());
-        return taskService.createTask(task);
+        return taskService.createTask(taskCreateDTO);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable UUID id) {
-        taskService.deleteTask(id);;
+        taskService.deleteTask(id);
     }
 }

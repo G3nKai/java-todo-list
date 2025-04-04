@@ -18,20 +18,16 @@ public class Task {
     private String name;
     private String description;
     private LocalDate deadline;
+    private Status status;
     public Task() {
         
     }
 
-    public Task(String name, String description) {
-        this.name = name;
-        this.description = description;
-        this.deadline = null;
-    }
-
-    public Task(String name, String description, LocalDate deadline) {
+    public Task(String name, String description, LocalDate deadline, Status status) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
+        this.status = status;
     }
 
     public UUID getId() {
@@ -60,5 +56,13 @@ public class Task {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

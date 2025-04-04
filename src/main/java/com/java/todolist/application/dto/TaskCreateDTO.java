@@ -2,6 +2,8 @@ package com.java.todolist.application.dto;
 
 import java.time.LocalDate;
 
+import com.java.todolist.core.domain.Status;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -11,6 +13,8 @@ public class TaskCreateDTO {
     private String name;
     private String description;
     private LocalDate deadline;
+    @NotNull(message = "Status can not be null.")
+    private Status status;
 
     public TaskCreateDTO(String name, String description) {
         this.name = name;
@@ -39,5 +43,13 @@ public class TaskCreateDTO {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
