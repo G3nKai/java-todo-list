@@ -28,17 +28,20 @@ public class Task {
     private Priority priority;
     @Column(nullable = false)
     private LocalDate created;
+    //@Column(nullable = false) - под вопросом
+    private LocalDate edited;
     public Task() {
         
     }
 
-    public Task(String name, String description, LocalDate deadline, Status status, Priority priority, LocalDate created) {
+    public Task(String name, String description, LocalDate deadline, Status status, Priority priority, LocalDate created, LocalDate edited) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.status = status;
         this.priority = priority;
         this.created = created;
+        this.edited = edited;
     }
 
     public UUID getId() {
@@ -87,5 +90,9 @@ public class Task {
 
     public LocalDate getCreated() {
         return created;
+    }
+
+    public LocalDate getEdited() {
+        return edited;
     }
 }

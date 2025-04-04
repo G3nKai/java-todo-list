@@ -28,7 +28,8 @@ public class TaskService {
             taskCreateDTO.getDeadline(),
             taskCreateDTO.getStatus(),
             taskCreateDTO.getPriority(),
-            LocalDate.now()
+            LocalDate.now(),
+            null//уточнить
         );
         return taskRepository.save(task);
     }
