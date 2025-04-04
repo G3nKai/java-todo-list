@@ -19,15 +19,17 @@ public class Task {
     private String description;
     private LocalDate deadline;
     private Status status;
+    private Priority priority;
     public Task() {
         
     }
 
-    public Task(String name, String description, LocalDate deadline, Status status) {
+    public Task(String name, String description, LocalDate deadline, Status status, Priority priority) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.status = status;
+        this.priority = priority;
     }
 
     public UUID getId() {
@@ -64,5 +66,13 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }

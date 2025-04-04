@@ -2,6 +2,7 @@ package com.java.todolist.application.dto;
 
 import java.time.LocalDate;
 
+import com.java.todolist.core.domain.Priority;
 import com.java.todolist.core.domain.Status;
 
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ public class TaskCreateDTO {
     private LocalDate deadline;
     @NotNull(message = "Status can not be null.")
     private Status status;
+    private Priority priority;
 
     public TaskCreateDTO(String name, String description) {
         this.name = name;
@@ -51,5 +53,13 @@ public class TaskCreateDTO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }
