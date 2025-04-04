@@ -1,5 +1,6 @@
 package com.java.todolist.core.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,8 @@ public class TaskService {
             taskCreateDTO.getDescription(),
             taskCreateDTO.getDeadline(),
             taskCreateDTO.getStatus(),
-            taskCreateDTO.getPriority()
+            taskCreateDTO.getPriority(),
+            LocalDate.now()
         );
         return taskRepository.save(task);
     }

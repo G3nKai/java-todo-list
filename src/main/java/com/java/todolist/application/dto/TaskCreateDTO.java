@@ -20,10 +20,10 @@ public class TaskCreateDTO {
     @NotNull(message = "Priority can not be null")
     private Priority priority;
 
-    public TaskCreateDTO(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+    // public TaskCreateDTO(String name, String description) {
+    //     this.name = name;
+    //     this.description = description;
+    // }
 
     public String getName() {
         return name;

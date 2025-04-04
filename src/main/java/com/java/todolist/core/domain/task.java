@@ -3,6 +3,7 @@ package com.java.todolist.core.domain;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,16 +21,19 @@ public class Task {
     private LocalDate deadline;
     private Status status;
     private Priority priority;
+    @Column(nullable = false)
+    private LocalDate created;
     public Task() {
         
     }
 
-    public Task(String name, String description, LocalDate deadline, Status status, Priority priority) {
+    public Task(String name, String description, LocalDate deadline, Status status, Priority priority, LocalDate created) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.status = status;
         this.priority = priority;
+        this.created = created;
     }
 
     public UUID getId() {
@@ -74,5 +78,9 @@ public class Task {
 
     public void setPriority(Priority priority) {
         this.priority = priority;
+    }
+
+    public LocalDate getCreated() {
+        return created;
     }
 }
