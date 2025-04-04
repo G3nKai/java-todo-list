@@ -9,13 +9,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class TaskCreateDTO {
-    @NotNull(message = "Name can not be null.")
-    @Size(min = 4, message = "Name should be at least 4 characters long.")
+    @NotNull(message = "Name can not be null")
+    @Size(min = 4, message = "Name should be at least 4 characters long")
     private String name;
     private String description;
+    @NotNull(message = "Deadline can not be null")
     private LocalDate deadline;
-    @NotNull(message = "Status can not be null.")
+    @NotNull(message = "Status can not be null")
     private Status status;
+    @NotNull(message = "Priority can not be null")
     private Priority priority;
 
     public TaskCreateDTO(String name, String description) {

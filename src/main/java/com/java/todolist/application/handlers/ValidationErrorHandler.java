@@ -18,7 +18,7 @@ public class ValidationErrorHandler {
 
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             description.append(fieldError.getDefaultMessage())
-                       .append("; ");
+                       .append(". ");
         }
 
         if (description.length() > 0) {
