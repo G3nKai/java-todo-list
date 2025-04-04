@@ -1,5 +1,6 @@
 package com.java.todolist.core.services;
 
+import com.java.todolist.core.domain.Status;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -22,11 +23,13 @@ public class TaskService {
     }
 
     public Task createTask(TaskCreateDTO taskCreateDTO) {
+        Status status = taskCreateDTO.getDeadline().isBefore(LocalDate.now()) ? Status.Overdue : Status.Active;
+        
         Task task = new Task(
             taskCreateDTO.getName(),
             taskCreateDTO.getDescription(),
             taskCreateDTO.getDeadline(),
-            taskCreateDTO.getStatus(),
+            status,
             taskCreateDTO.getPriority(),
             LocalDate.now(),
             null//уточнить

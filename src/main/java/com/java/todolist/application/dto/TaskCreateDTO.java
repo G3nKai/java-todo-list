@@ -3,7 +3,6 @@ package com.java.todolist.application.dto;
 import java.time.LocalDate;
 
 import com.java.todolist.core.domain.Priority;
-import com.java.todolist.core.domain.Status;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,8 +14,6 @@ public class TaskCreateDTO {
     private String description;
     @NotNull(message = "Deadline can not be null")
     private LocalDate deadline;
-    @NotNull(message = "Status can not be null")
-    private Status status;
     @NotNull(message = "Priority can not be null")
     private Priority priority;
 
@@ -42,14 +39,6 @@ public class TaskCreateDTO {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public Priority getPriority() {
