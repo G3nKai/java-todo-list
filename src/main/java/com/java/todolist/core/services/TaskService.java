@@ -28,6 +28,7 @@ public class TaskService {
         if (sortBy != null && direction != null) {
             try {
                 direction = direction.trim().toLowerCase();
+                sortBy = sortBy.trim().toLowerCase();
 
                 if (!isValidSortDirection(direction)) {
                     throw new IllegalArgumentException();
@@ -44,7 +45,6 @@ public class TaskService {
                 System.out.println(order);
                 sort = Sort.by(order);
             } catch (IllegalArgumentException e) {
-                // Ловим ошибку и выводим более информативное сообщение
                 throw new IllegalArgumentException("Invalid sort field or direction: sortBy - " + sortBy + ", Direction - " + direction, e);
             }
         }
