@@ -4,7 +4,10 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,8 +26,10 @@ public class Task {
     @Column(nullable = false)
     private ZonedDateTime deadline;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Priority priority;
     @Column(nullable = false)
     private ZonedDateTime created;
