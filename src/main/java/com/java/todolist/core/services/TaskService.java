@@ -78,6 +78,11 @@ public class TaskService {
     }
 
     public void deleteTask(UUID id) {
-        taskRepository.deleteById(id);
+        taskRepository.findById(id)
+                      .ifPresentOrElse(
+                        _task -> taskRepository.deleteById(id), 
+                        () -> {
+                            throw new RuntimeException(String.format("Task with id = %s does not exist", id));
+                        });
     }
 }

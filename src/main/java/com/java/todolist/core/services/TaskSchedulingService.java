@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.java.todolist.core.domain.Status;
 import com.java.todolist.core.domain.Task;
-import com.java.todolist.core.repositories.ITaskRepository;
 import com.java.todolist.core.repositories.ITaskSchedulingRepository;
 
 @Service
