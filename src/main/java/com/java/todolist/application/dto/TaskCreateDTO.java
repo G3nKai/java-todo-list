@@ -1,6 +1,6 @@
 package com.java.todolist.application.dto;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 import com.java.todolist.core.domain.Priority;
 
@@ -13,7 +13,7 @@ public class TaskCreateDTO {
     private String name;
     private String description;
     @NotNull(message = "Deadline can not be null")
-    private LocalDate deadline;
+    private ZonedDateTime deadline;
     @NotNull(message = "Priority can not be null")
     private Priority priority;
 
@@ -33,11 +33,11 @@ public class TaskCreateDTO {
         this.description = description;
     }
 
-    public LocalDate getDeadline() {
+    public ZonedDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(ZonedDateTime deadline) {
         this.deadline = deadline;
     }
 

@@ -1,6 +1,6 @@
 package com.java.todolist.core.domain;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -21,20 +21,19 @@ public class Task {
     @Column(columnDefinition = "TEXT")
     private String description;
     @Column(nullable = false)
-    private LocalDate deadline;
+    private ZonedDateTime deadline;
     @Column(nullable = false)
     private Status status;
     @Column(nullable = false)
     private Priority priority;
     @Column(nullable = false)
-    private LocalDate created;
-    //@Column(nullable = false) - под вопросом
-    private LocalDate edited;
+    private ZonedDateTime created;
+    private ZonedDateTime edited;
     public Task() {
         
     }
 
-    public Task(String name, String description, LocalDate deadline, Status status, Priority priority, LocalDate created, LocalDate edited) {
+    public Task(String name, String description, ZonedDateTime deadline, Status status, Priority priority, ZonedDateTime created, ZonedDateTime edited) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
@@ -64,11 +63,11 @@ public class Task {
         this.description = description;
     }
 
-    public LocalDate getDeadline() {
+    public ZonedDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(ZonedDateTime deadline) {
         this.deadline = deadline;
     }
 
@@ -88,11 +87,11 @@ public class Task {
         this.priority = priority;
     }
 
-    public LocalDate getCreated() {
+    public ZonedDateTime getCreated() {
         return created;
     }
 
-    public LocalDate getEdited() {
+    public ZonedDateTime getEdited() {
         return edited;
     }
 }
