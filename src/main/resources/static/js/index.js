@@ -41,7 +41,7 @@ async function getAllTasks(parent) {
 
             const small = document.createElement('small');
             small.className = "text-muted d-block mb-1";
-            small.textContent = `Создано: ${new Date(task.created).toLocaleString()} | Дедлайн: ${new Date(task.deadline).toLocaleString()}`;
+            small.textContent = `Создано: ${new Date(task.created).toLocaleString()} ${task.deadline !== null ? `| Дедлайн: ${new Date(task.deadline).toLocaleString()}` : ""}`;
             li.appendChild(small);
 
             const badgeContainer = document.createElement('div');

@@ -22,7 +22,6 @@ public class Task {
     private String name;
     @Column(columnDefinition = "TEXT")
     private String description;
-    @Column(nullable = false)
     private ZonedDateTime deadline;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

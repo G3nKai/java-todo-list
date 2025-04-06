@@ -63,12 +63,17 @@ public class TaskService {
     }
 
     public Task createTask(TaskCreateDTO taskCreateDTO) {
-        Status status = taskCreateDTO.getDeadline().isBefore(ZonedDateTime.now()) ? Status.Overdue : Status.Active;
+        ZonedDateTime deadline = taskCreateDTO.getDeadline() != null
+                                 ? taskCreateDTO.getDeadline()
+                                 : null;
+        Status status = deadline != null
+                        ? (deadline.isBefore(ZonedDateTime.now()) ? Status.Overdue : Status.Active)
+                        : Status.Active;
         
         Task task = new Task(
             taskCreateDTO.getName(),
             taskCreateDTO.getDescription(),
-            taskCreateDTO.getDeadline(),
+            deadline,
             status,
             taskCreateDTO.getPriority(),
             ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS),

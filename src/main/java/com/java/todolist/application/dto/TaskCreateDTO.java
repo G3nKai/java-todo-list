@@ -12,7 +12,6 @@ public class TaskCreateDTO {
     @Size(min = 4, message = "Name should be at least 4 characters long")
     private String name;
     private String description;
-    @NotNull(message = "Deadline can not be null")
     private ZonedDateTime deadline;
     @NotNull(message = "Priority can not be null")
     private Priority priority;
