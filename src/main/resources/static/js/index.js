@@ -73,23 +73,53 @@ async function firstLoad() {
     const body = document.querySelector('body');
     body.className = "bg-light";
 
-    const div1 = document.createElement('div');
-    div1.className = "container py-5";
+    const container = document.createElement('div');
+    container.className = "container py-5";
 
-    body.appendChild(div1);
+    body.appendChild(container);
 
-    const mainH1 = document.createElement('h1');
-    mainH1.className = "text-center mb-4";
-    mainH1.textContent = "Мои задачи";
-    div1.appendChild(mainH1);
+    const header = document.createElement('h1');
+    header.className = "text-center mb-4";
+    header.textContent = "Мои задачи";
+    container.appendChild(header);
 
-    const div2 = document.createElement('div');
-    div2.className = "task-wrapper";
+    const selectWrapper = document.createElement('div');
+    selectWrapper.className = "mb-3";
 
-    div1.appendChild(div2);
+    const sortSelect = document.createElement('select');
+    sortSelect.className = "form-select w-auto";
 
-    await getAllTasks(div2);
-    
+    const options = [
+        { text: "Сортировать по...", value: "" },
+        { text: "Дата создания ↑", value: "created-asc" },
+        { text: "Дата создания ↓", value: "created-desc" },
+        { text: "Дедлайн ↑", value: "deadline-asc" },
+        { text: "Дедлайн ↓", value: "deadline-desc" },
+        { text: "Приоритет ↑", value: "priority-asc" },
+        { text: "Приоритет ↓", value: "priority-desc" }
+    ];
+
+    options.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.textContent = opt.text;
+        sortSelect.appendChild(option);
+    });
+
+    selectWrapper.appendChild(sortSelect);
+    container.appendChild(selectWrapper);
+
+    const taskWrapper = document.createElement('div');
+    taskWrapper.className = "task-wrapper";
+    container.appendChild(taskWrapper);
+
+    sortSelect.addEventListener("change", async (e) => {
+        const [field, direction] = e.target.value.split("-");
+        taskWrapper.innerHTML = "";
+        await getAllTasks(taskWrapper, field, direction);
+    });
+
+    await getAllTasks(taskWrapper);
 }
 
 firstLoad();
