@@ -26,7 +26,39 @@ async function getAllTasks(parent) {
 
             const li = document.createElement('li');
             li.className = "list-group-item";
-            li.textContent = task.name;
+            
+            const title = document.createElement('h5');
+            title.className = "mb-1 d-inline";
+            title.textContent = task.name;
+            li.appendChild(title);
+
+            if (task.edited) {
+                const editedBadge = document.createElement('span');
+                editedBadge.className = "badge bg-warning text-dark ms-2";
+                editedBadge.textContent = task.edited;
+                title.appendChild(editedBadge);
+            }
+
+            const small = document.createElement('small');
+            small.className = "text-muted d-block mb-1";
+            small.textContent = `Создано: ${new Date(task.created).toLocaleString()} | Дедлайн: ${new Date(task.deadline).toLocaleString()}`;
+            li.appendChild(small);
+
+            const badgeContainer = document.createElement('div');
+
+            const statusBadge = document.createElement('span');
+            statusBadge.className = "badge bg-secondary me-2";
+            statusBadge.textContent = task.status;
+            badgeContainer.appendChild(statusBadge);
+
+            const priorityBadge = document.createElement('span');
+            priorityBadge.className = "badge bg-info text-dark";
+            priorityBadge.textContent = task.priority;
+            badgeContainer.appendChild(priorityBadge);
+
+            li.appendChild(badgeContainer);
+
+
             ul.appendChild(li);
         });
 
