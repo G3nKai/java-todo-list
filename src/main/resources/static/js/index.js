@@ -1,11 +1,19 @@
-async function getAllTasks(parent) {
+async function getAllTasks(parent, field = '', direction = '') {
     try {
-        const response = await fetch("http://localhost:8080/tasks", {
+        const url = new URL("http://localhost:8080/tasks");
+        
+        if (field && direction) {
+            url.searchParams.append("sortBy", field);
+            url.searchParams.append("direction", direction);
+        }
+
+        const response = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         });
+        
         const data = await response.json();
 
         const ul = document.createElement('ul');
@@ -58,16 +66,16 @@ async function getAllTasks(parent) {
 
             li.appendChild(badgeContainer);
 
-
             ul.appendChild(li);
         });
 
         parent.appendChild(ul);
-        
+
     } catch (error) {
         console.error("Ошибка getAllTasks()");
     }
 }
+
 
 async function firstLoad() {
     const body = document.querySelector('body');
@@ -93,8 +101,8 @@ async function firstLoad() {
         { text: "Сортировать по...", value: "" },
         { text: "Дата создания ↑", value: "created-asc" },
         { text: "Дата создания ↓", value: "created-desc" },
-        { text: "Дедлайн ↑", value: "deadline-asc" },
-        { text: "Дедлайн ↓", value: "deadline-desc" },
+        { text: "Статус задачи ↑", value: "status-asc" },
+        { text: "Статус задачи ↓", value: "status-desc" },
         { text: "Приоритет ↑", value: "priority-asc" },
         { text: "Приоритет ↓", value: "priority-desc" }
     ];
