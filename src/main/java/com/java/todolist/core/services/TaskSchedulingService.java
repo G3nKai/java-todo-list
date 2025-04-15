@@ -18,7 +18,7 @@ public class TaskSchedulingService {
     @Autowired
     private ITaskSchedulingRepository taskRepository;
 
-    @Scheduled(cron = "*/15 * * * * ?")//сделать потом на каждые сутки!
+    @Scheduled(cron = "0 0 * * * ?")
     @Async
     public void checkActiveTasks() {
         ZonedDateTime now = ZonedDateTime.now();

@@ -1,12 +1,15 @@
-body {
-    height: 100vh;
-    background: linear-gradient(135deg, #74ebd5, #9face6);
-    align-items: start;
-    padding-top: 60px;
+.bg-orange {
+    background-color: orange !important; /* или другой цвет */
 }
-h1 {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px 40px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+.bg-red {
+    background-color: red !important;
+}
+
+.bg-green {
+    background-color: rgb(22, 230, 67);
+}
+
+.bg-dark-green {
+    background-color: rgb(38, 100, 66);
 }

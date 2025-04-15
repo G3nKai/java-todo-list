@@ -97,4 +97,8 @@ public class Task {
     public ZonedDateTime getEdited() {
         return edited;
     }
+
+    public void setEdited(ZonedDateTime edited) {
+        this.edited = edited;
+    }
 }
