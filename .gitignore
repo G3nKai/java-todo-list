@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Не добавлять установленные зависимости и браузеры
+node_modules/
+.playwright/
+
+# Не добавлять временные артефакты тестов
+test-results/
+playwright-report/
+
+# Не добавлять системные и временные файлы
+*.log
+*.tmp
+*.cache

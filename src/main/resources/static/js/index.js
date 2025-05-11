@@ -39,16 +39,9 @@ async function getAllTasks(parent, field = '', direction = '') {
             const contentDiv = document.createElement('div');
 
             const title = document.createElement('h5');
-            title.className = "mb-1 d-inline";
+            title.classList.toggle('task-title');
             title.textContent = task.name;
             contentDiv.appendChild(title);
-
-            if (task.edited) {
-                const editedBadge = document.createElement('span');
-                editedBadge.className = "badge bg-warning text-dark ms-2";
-                editedBadge.textContent = task.edited;
-                title.appendChild(editedBadge);
-            }
 
             const small = document.createElement('small');
             small.className = "text-muted d-block mb-1";
@@ -133,6 +126,13 @@ async function getAllTasks(parent, field = '', direction = '') {
             });
 
             ul.appendChild(li);
+
+            li.addEventListener('click', async (e) => {
+                if (!e.target.closest('button') && e.target.tagName !== 'BUTTON') {
+                    await showTaskDetailsModal(task.id);
+                }
+            });
+            
         });
 
         parent.appendChild(ul);
@@ -150,6 +150,249 @@ async function getAllTasks(parent, field = '', direction = '') {
     }
 }
 
+async function showTaskDetailsModal(id) {
+    const url = new URL(`http://localhost:8080/tasks/${id}`);
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const task = await response.json();
+
+        const modalOverlay = document.createElement('div');
+        modalOverlay.style.position = "fixed";
+        modalOverlay.style.top = 0;
+        modalOverlay.style.left = 0;
+        modalOverlay.style.width = "100%";
+        modalOverlay.style.height = "100%";
+        modalOverlay.style.backgroundColor = "rgba(0,0,0,0.5)";
+        modalOverlay.style.display = "flex";
+        modalOverlay.style.justifyContent = "center";
+        modalOverlay.style.alignItems = "center";
+        modalOverlay.style.zIndex = "1000";
+
+        const modalContent = document.createElement('div');
+        modalContent.className = "bg-white p-4 rounded shadow";
+        modalContent.style.width = "100%";
+        modalContent.style.maxWidth = "600px";
+
+        const modalHeader = document.createElement('h3');
+        modalHeader.className = "mb-4 pb-2 border-bottom task-title";
+        modalHeader.textContent = task.name;
+
+        const editButton = document.createElement('button');
+        editButton.className = "btn btn-sm btn-outline-primary float-end";
+        editButton.textContent = "Редактировать";
+        modalHeader.appendChild(editButton);
+
+        const detailsList = document.createElement('dl');
+        detailsList.className = "row";
+
+        const editForm = document.createElement('form');
+        editForm.style.display = 'none';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = "text";
+        nameInput.className = "form-control mb-2";
+        nameInput.value = task.name;
+        nameInput.required = true;
+
+        const descInput = document.createElement('textarea');
+        descInput.className = "form-control mb-2";
+        descInput.value = task.description || "";
+
+        const deadlineInput = document.createElement('input');
+        deadlineInput.type = "date";
+        deadlineInput.className = "form-control mb-2";
+        if (task.deadline) {
+            const deadlineDate = new Date(task.deadline);
+            const year = deadlineDate.getFullYear();
+            const month = String(deadlineDate.getMonth() + 1).padStart(2, '0');
+            const day = String(deadlineDate.getDate()).padStart(2, '0');
+            deadlineInput.value = `${year}-${month}-${day}`;
+        }
+
+        const prioritySelect = document.createElement('select');
+        prioritySelect.className = "form-select mb-3";
+        ["", "Low", "Medium", "High", "Critical"].forEach(level => {
+            const opt = document.createElement("option");
+            opt.value = level;
+            opt.textContent = level;
+            if (level === (task.priority || "")) {
+                opt.selected = true;
+            }
+            prioritySelect.appendChild(opt);
+        });
+
+        const saveButton = document.createElement('button');
+        saveButton.type = "submit";
+        saveButton.className = "btn btn-primary me-2";
+        saveButton.textContent = "Сохранить";
+
+        const cancelEditButton = document.createElement('button');
+        cancelEditButton.type = "button";
+        cancelEditButton.className = "btn btn-secondary";
+        cancelEditButton.textContent = "Отмена";
+
+        const buttonGroup = document.createElement('div');
+        buttonGroup.className = "d-flex mt-3";
+        buttonGroup.appendChild(saveButton);
+        buttonGroup.appendChild(cancelEditButton);
+
+        editForm.appendChild(nameInput);
+        editForm.appendChild(descInput);
+        editForm.appendChild(deadlineInput);
+        editForm.appendChild(prioritySelect);
+        editForm.appendChild(buttonGroup);
+
+        const toggleEditMode = (isEditing) => {
+            if (isEditing) {
+                detailsList.style.display = 'none';
+                editForm.style.display = 'block';
+                editButton.style.display = 'none';
+            } else {
+                detailsList.style.display = 'block';
+                editForm.style.display = 'none';
+                editButton.style.display = 'block';
+            }
+        };
+
+        editButton.addEventListener('click', () => toggleEditMode(true));
+        cancelEditButton.addEventListener('click', () => toggleEditMode(false));
+
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+        
+            const updatedTask = {
+                name: nameInput.value.trim(),
+                description: descInput.value.trim(),
+                priority: prioritySelect.value === "" ? null : prioritySelect.value
+            };
+        
+            if (deadlineInput.value) {
+                const [year, month, day] = deadlineInput.value.split('-');
+                updatedTask.deadline = `${year}-${month}-${day}T23:59:59Z`;
+            } else {
+                updatedTask.deadline = null;
+            }
+        
+            try {
+                const updateResponse = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(updatedTask)
+                });
+        
+                if (!updateResponse.ok) {
+                    const errorData = await updateResponse.json();
+                    
+                    if (updateResponse.status === 400 && errorData.description) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = "alert alert-danger mt-3";
+                        errorDiv.textContent = errorData.description;
+                        
+                        const existingError = editForm.querySelector('.alert-danger');
+                        if (existingError) {
+                            existingError.remove();
+                        }
+                        
+                        editForm.appendChild(errorDiv);
+                        return;
+                    }
+                    throw new Error(errorData.description || 'Ошибка при обновлении задачи');
+                }
+        
+                const updatedTaskData = await updateResponse.json();
+                
+                modalHeader.textContent = updatedTaskData.name;
+                modalHeader.appendChild(editButton);
+                
+                const existingError = editForm.querySelector('.alert-danger');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                const taskWrapper = document.querySelector('.task-wrapper');
+                taskWrapper.innerHTML = "";
+                await getAllTasks(taskWrapper);
+                
+                toggleEditMode(false);
+            } catch (error) {
+                console.error("Ошибка при обновлении задачи:", error);
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = "alert alert-danger mt-3";
+                errorDiv.textContent = error.message || 'Не удалось обновить задачу';
+                
+                const existingError = editForm.querySelector('.alert-danger');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                editForm.appendChild(errorDiv);
+            }
+        });
+
+        const addDetailRow = (label, value) => {
+            if (value === null || value === undefined) return;
+
+            const dt = document.createElement('dt');
+            dt.className = "col-sm-4 text-muted fw-normal";
+            dt.textContent = label;
+
+            const dd = document.createElement('dd');
+            dd.className = "col-sm-8 mb-3";
+            
+            if (label.includes("Дата") || label === "Дедлайн") {
+                dd.textContent = value ? new Date(value).toLocaleString() : "-";
+            } else {
+                dd.textContent = value || "-";
+            }
+
+            detailsList.appendChild(dt);
+            detailsList.appendChild(dd);
+        };
+
+        addDetailRow("ID задачи", task.id);
+        addDetailRow("Статус", task.status);
+        addDetailRow("Приоритет", task.priority);
+        addDetailRow("Описание", task.description);
+        addDetailRow("Дата создания", task.created);
+        addDetailRow("Последнее изменение", task.edited);
+        addDetailRow("Дедлайн", task.deadline);
+
+        const closeButton = document.createElement('button');
+        closeButton.className = "btn btn-outline-secondary mt-3 w-100";
+        closeButton.textContent = "Закрыть";
+        closeButton.addEventListener('click', () => {
+            modalOverlay.remove();
+        });
+
+        modalContent.appendChild(modalHeader);
+        modalContent.appendChild(detailsList);
+        modalContent.appendChild(editForm);
+        modalContent.appendChild(closeButton);
+        modalOverlay.appendChild(modalContent);
+
+        document.body.appendChild(modalOverlay);
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.remove();
+            }
+        });
+
+    } catch (err) {
+        console.error("Ошибка при просмотре задачи:", err);
+        alert('Не удалось загрузить данные задачи');
+    }
+}
 async function firstLoad() {
     const body = document.querySelector('body');
     body.className = "bg-light";

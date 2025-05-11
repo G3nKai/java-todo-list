@@ -35,44 +35,43 @@ public class TaskService {//починить сортировку
     private ITaskRepository taskRepository;
 
     public List<Task> getAllTasks(String sortBy, String direction) {
-        Sort sort = Sort.unsorted();
-
         if (sortBy != null && direction != null) {
-            try {
-                direction = direction.trim().toLowerCase();
-                sortBy = sortBy.trim().toLowerCase();
-
-                if (!isValidSortDirection(direction)) {
-                    throw new IllegalArgumentException();
-                }
-
-                if (!isValidSortField(sortBy)) {
-                    throw new IllegalArgumentException();
-                }
-
-                System.out.println("Sorting by: " + sortBy + " Direction: " + direction);
-                Sort.Direction directionSort = Sort.Direction.fromString(direction);
-                Sort.Order order = new Sort.Order(directionSort, sortBy);
-                System.out.println(order);
-                sort = Sort.by(order);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid sort field or direction: sortBy - " + sortBy + ", Direction - " + direction, e);
+            sortBy = sortBy.trim().toLowerCase();
+            direction = direction.trim().toLowerCase();
+    
+            if (!isValidSortDirection(direction)) {
+                throw new IllegalArgumentException("Invalid direction: " + direction);
             }
+    
+            if (!isValidSortField(sortBy)) {
+                throw new IllegalArgumentException("Invalid sort field: " + sortBy);
+            }
+    
+            if (sortBy.equals("priority")) {
+                return getEnumSortedTasks(Comparator.comparingInt(t -> t.getPriority().ordinal()), "desc".equals(direction));
+            }
+    
+            if (sortBy.equals("status")) {
+                return getEnumSortedTasks(Comparator.comparingInt(t -> t.getStatus().ordinal()), "desc".equals(direction));
+            }
+    
+            Sort.Direction directionSort = Sort.Direction.fromString(direction);
+            Sort.Order order = new Sort.Order(directionSort, sortBy);
+            return taskRepository.findAll(Sort.by(order));
         }
-
-        System.out.println("Sort applied: " + sort);
-
-        List<Task> tasks = taskRepository.findAll(sort);
-
-        if ("priority".equals(sortBy)) {
-            tasks.sort(Comparator.comparingInt(task -> task.getPriority().ordinal()));
-        } else if ("status".equals(sortBy)) {
-            tasks.sort(Comparator.comparingInt(task -> task.getStatus().ordinal()));
+    
+        return taskRepository.findAll();
+    }
+    
+    private List<Task> getEnumSortedTasks(Comparator<Task> comparator, boolean reverse) {
+        List<Task> tasks = taskRepository.findAll();
+        if (reverse) {
+            comparator = comparator.reversed();
         }
-
+        tasks.sort(comparator);
         return tasks;
     }
-
+    
     private boolean isValidSortDirection(String direction) {
         return Arrays.asList("asc", "desc").contains(direction);
     }
@@ -110,7 +109,12 @@ public class TaskService {//починить сортировку
     }
 
     public Task createTask(TaskCreateDTO taskCreateDTO) {
-        String name = taskCreateDTO.getName();
+        String name = taskCreateDTO.getName().trim();
+        if (name.length() < 4) throw new IllegalArgumentException("Spaces made the name less than 4 characters long");
+        
+
+        if (taskCreateDTO.getDescription() != null)
+            taskCreateDTO.setDescription(taskCreateDTO.getDescription().trim());
 
         Optional<Pair<ZonedDateTime, String>> deadlineMacroResult = extractBeforeDate(name);
         Optional<ZonedDateTime> deadlineMacro = deadlineMacroResult.map(Pair::getFirst);
@@ -157,15 +161,18 @@ public class TaskService {//починить сортировку
                     break;
             }
             name = name.replaceFirst("!" + macro, "").trim();
+            if (taskCreateDTO.getPriority() != null) {
+                priority = taskCreateDTO.getPriority();    
+            }
 
             if (name.length() < 4) throw new IllegalArgumentException("Macros shorted name to less than 4 characters long");
         }
     
         ZonedDateTime created = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
-    
+        String description = taskCreateDTO.getDescription() != null ? taskCreateDTO.getDescription().trim() : null;  
         Task task = new Task(
             name,
-            taskCreateDTO.getDescription(),
+            description,
             deadline,
             status,
             priority,

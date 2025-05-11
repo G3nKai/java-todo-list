@@ -10,7 +10,9 @@ import jakarta.validation.constraints.Size;
 public class TaskCreateDTO {
     @NotNull(message = "Name can not be null")
     @Size(min = 4, message = "Name should be at least 4 characters long")
+    @Size(max = 255, message = "Name should be no more than 255 characters long")
     private String name;
+    @Size(max = 2047, message = "Description can not be more then 2047 characters long")
     private String description;
     private ZonedDateTime deadline;
     private Priority priority;

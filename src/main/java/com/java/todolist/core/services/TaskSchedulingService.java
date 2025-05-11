@@ -12,13 +12,29 @@ import com.java.todolist.core.domain.Status;
 import com.java.todolist.core.domain.Task;
 import com.java.todolist.core.repositories.ITaskSchedulingRepository;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class TaskSchedulingService {
 
     @Autowired
     private ITaskSchedulingRepository taskRepository;
 
-    @Scheduled(cron = "0 0 * * * ?")
+    @PostConstruct
+    @Async
+    public void firstCheckActiveTasks() {
+        ZonedDateTime now = ZonedDateTime.now();
+        List<Task> overdueTasks = taskRepository.findAllByStatusAndDeadlineBefore(Status.Active, now);
+
+        if (!overdueTasks.isEmpty()) {
+            System.out.println("Активные задачи с просроченным дедлайном теперь overdue.");
+            overdueTasks.forEach(task -> {
+                task.setStatus(Status.Overdue);
+                taskRepository.save(task);
+            });
+        }
+    }
+    @Scheduled(cron = "59 59 * * * ?")
     @Async
     public void checkActiveTasks() {
         ZonedDateTime now = ZonedDateTime.now();
